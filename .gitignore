@@ -1,0 +1,11 @@
+
+# data files
+*.csv
+*.xlsx
+/data/*
+# imgs for reports
+*.png
+
+# tableau files
+*.twb
+*.twbr
