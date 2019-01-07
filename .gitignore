@@ -4,6 +4,7 @@
 *.xlsx
 /data/*
 # imgs for reports
+/imgs/*
 *.png
 
 # tableau files

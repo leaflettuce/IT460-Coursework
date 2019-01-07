@@ -2,7 +2,7 @@
 
 Coursework for SNHU Machine Learning Coursework
 
-### Week One
+### Lab One
 ```
 Intro and Linear Regression
 ```
