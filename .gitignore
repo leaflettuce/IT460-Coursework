@@ -10,3 +10,7 @@
 # tableau files
 *.twb
 *.twbr
+
+# reports
+/reports/*
+*.docx
