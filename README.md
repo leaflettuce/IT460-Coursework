@@ -6,3 +6,8 @@ Coursework for SNHU Machine Learning Coursework
 ```
 Intro and Linear Regression
 ```
+
+### Lab Two
+```
+Multiple Non-linear Regression using lm()
+```
