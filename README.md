@@ -1,6 +1,6 @@
 # IT-460: Machine Learning
 
-Coursework for SNHU Machine Learning Coursework
+Coursework for SNHU Machine Learning Class
 
 ### Lab One
 ```
