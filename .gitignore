@@ -6,6 +6,7 @@
 # imgs for reports
 /imgs/*
 *.png
+/final/data/*
 
 # tableau files
 *.twb
