@@ -50,8 +50,16 @@ round(survived_prop, digits = 1)                      # |---------
 
 # Age 
 summary(df$Age)                                       # <----------(2)
+mean(df$Age, na.rm = TRUE)                            # |----------
 
 # Age to Fare
+model <- lm(df$Fare ~ df$Age)
+summary(model)
+
+df_no_na <- na.omit(df)
+cor(df_no_na$Age, df_no_na$Fare)                      # <-----------(3)
+
+df_no_na$Survived <- ifelse(df_no_na$Survived == 1,'yes', 'no')
 
 
 ###########
@@ -59,9 +67,10 @@ summary(df$Age)                                       # <----------(2)
 ###########
 
 # Suvived Distribution                               # <-----------(1)
-ggplot(aes(x = Survived), data = df) +
+ggplot(aes(x = Survived, fill = 'Blue'), data = df) +
   geom_histogram(stat = 'Count') + 
-  ggtitle('Survival Split') 
+  ggtitle('Survival Distribution') + 
+  guides(fill=FALSE)
            
 # Age boxplot
 ggplot(aes(y = Age, x = 1), data = df) +            # <-------------(2)
@@ -69,14 +78,18 @@ ggplot(aes(y = Age, x = 1), data = df) +            # <-------------(2)
   ggtitle('Boxplot of Passenger Age')
 
 # Age to Fare Scatter 
-ggplot(aes(x = Age, y = Fare), data = df) +         #<--------------(3)
+ggplot(aes(x = Age, y = Fare), data = subset(df_no_na, Fare < 500)) +         #<--------------(3)
   geom_jitter(aes(color = Survived)) + 
   geom_smooth(method = lm, color = 'black') +
-  labs(title = "Titanic Passenger Age by Fare Scatterplot",
-       subtitle = "Most Expensive Titanic Tickets ...",
-     caption = "Source: Kaggle Titanic Disaster Dataset",
-     x = "Age of Passenger", y = "Fare for Ticket") 
-  # ADD TEXT
+  labs(title = "Titanic EDA: Passenger Age by Fare Paid",
+       subtitle = "There is a Very Slight Positive Correlation Between Passenger Age and Ticket Cost",
+       
+       caption = paste("(R2 = ",signif(round(summary(model)$r.squared, 5), 2),
+                        ", Intercept =",signif(round(model$coef[[1]],5 ), 3),
+                        ", Slope =",signif(round(model$coef[[2]], 5),2),
+                        ", P =",signif(round(summary(model)$coef[2,4], 5), 3), ")"),
+     
+       x = "Age of Passenger", y = "Cost for Ticket") 
 
 # ---------------------------------------------------------------------------
 # Required commands
