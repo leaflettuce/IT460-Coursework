@@ -11,3 +11,8 @@ Intro and Linear Regression
 ```
 Multiple Non-linear Regression using lm()
 ```
+
+### Lab Three
+```
+EDA of Titanic Survivor Data
+```
