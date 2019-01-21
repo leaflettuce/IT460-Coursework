@@ -3,10 +3,17 @@
 *.csv
 *.xlsx
 /data/*
+/final/data/*
+*.Rhistory
+*.DOCUMENTATION
+*.data
+*.names
+
+
 # imgs for reports
 /imgs/*
 *.png
-/final/data/*
+
 
 # tableau files
 *.twb
@@ -16,3 +23,4 @@
 /reports/*
 *.docx
 *.zip
+
