@@ -78,9 +78,9 @@ ggplot(aes(y = Age, x = 1), data = df) +            # <-------------(2)
   ggtitle('Boxplot of Passenger Age')
 
 # Age to Fare Scatter 
-ggplot(aes(x = Age, y = Fare), data = subset(df_no_na, Fare < 500)) +         #<--------------(3)
-  geom_jitter(aes(color = Survived)) + 
-  geom_smooth(method = lm, color = 'black') +
+ggplot(aes(x = Age, y = Fare, color = "black"), data = subset(df_no_na, Fare < 200)) +         #<--------------(3)
+  geom_jitter(size = 2) + 
+  geom_smooth(method = lm, color = 'black', size = 1.3) +
   labs(title = "Titanic EDA: Passenger Age by Fare Paid",
        subtitle = "There is a Very Slight Positive Correlation Between Passenger Age and Ticket Cost",
        
@@ -89,7 +89,8 @@ ggplot(aes(x = Age, y = Fare), data = subset(df_no_na, Fare < 500)) +         #<
                         ", Slope =",signif(round(model$coef[[2]], 5),2),
                         ", P =",signif(round(summary(model)$coef[2,4], 5), 3), ")"),
      
-       x = "Age of Passenger", y = "Cost for Ticket") 
+       x = "Age of Passenger", y = "Cost for Ticket") +
+      guides(color=FALSE)
 
 # ---------------------------------------------------------------------------
 # Required commands
