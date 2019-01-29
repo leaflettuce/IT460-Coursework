@@ -35,7 +35,7 @@ table(df$default)
 ################
 
 # Transform to same format as textbook
-df$default <- ifelse(df$default > 1, 'yes', 'no') 
+df$default <- as.factor(ifelse(df$default > 1, 'yes', 'no'))
 
 
 # Data Prep
@@ -111,9 +111,74 @@ CrossTable(y_test$default, ada10_pred,
            dnn = c('actual default', 'predicted default'))
 
 
+
+###############
+# 60/40 split #     Acc - 70%, Kappa - 22%
+###############
+
+train60 <- sample(1000, 600)
+
+# Set train and test data
+X_train60 <- df[train60, ]
+X_train60$default <- NULL
+
+y_train60 <- df[train60, c('default')]
+y_train60 <- data.frame(y_train60)
+colnames(y_train60) <- "default"
+
+X_test60 <- df[-train60, ]
+X_test60$default <- NULL
+
+y_test60 <- df[-train60, c('default')]
+y_test60 <- data.frame(y_test60)
+colnames(y_test60) <- "default"
+
+
+# Model
+ada10_model60 <- C5.0(X_train60, y_train60$default, trials = 10)
+
+# Summary
+summary(ada10_model60)
+
+# Predict
+ada10_pred60 <- predict(ada10_model60, X_test60)
+
+
+# Confusion Matrix
+CrossTable(y_test60$default, ada10_pred60,
+           prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
+           dnn = c('actual default', 'predicted default'))
+
+confusionMatrix(ada10_pred60, y_test60$default, positive = "no")
+
+
+
+#####################
+# Parameter Turning #
+#####################
+
+# fit standard              Acc - 74, Kappa - 35
+m <- train(default ~ ., data = df, method = "C5.0")
+# results
+m
+
+# Custom                   Acc - 76, Kappa - 38
+ctrl <- trainControl(method = "cv", number = 10, selectionFunction = "best")
+grid <- expand.grid(.model = c("tree", "rules"),
+                    .trials = c(1, 5, 10, 20, 25, 30, 35),
+                    .winnow = c(TRUE, FALSE))
+m_cust <- train(default ~ ., data = df, method = "C5.0", 
+                metric = 'Kappa',
+                trControl = ctrl,
+                tuneGrid = grid)
+# results
+m_cust
+
+
 ######################
 # Further Evaluation #
 ######################
+
 ######
 # C5 #
 ######
