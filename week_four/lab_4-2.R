@@ -72,7 +72,7 @@ prop.table(table(y_test))
 
 #train
 c5_model <- C5.0(X_train, y_train$default)
-
+c5_model
 # Model Results
 summary(c5_model)
 
@@ -95,7 +95,7 @@ CrossTable(y_test$default, c5_pred,
 
 # Train
 ada10_model <- C5.0(X_train, y_train$default, trials = 10)
-
+ada10_model
 # Summary
 summary(ada10_model)
 
@@ -112,6 +112,26 @@ CrossTable(y_test$default, ada10_pred,
 
 
 
+### ADDED
+matrix_dim <- list(c("no","yes"), c("no","yes"))
+names(matrix_dim) <- c("predicted", "actual")
+
+error_cost <- matrix(c(0,1,4,0), nrow=2, dimnames = matrix_dim)
+credit_cost <- C5.0(X_train, y_train$default, costs = error_cost)
+
+credit_cost_pred <- predict(credit_cost, X_test)
+
+CrossTable(y_test$default, credit_cost_pred,
+           prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE,
+           dnn = c('actual default', 'predicted default'))
+
+
+
+credit_60 <- C5.0(X_train60, y_train60$default, costs = error_cost)
+
+credit60_pred <- predict(credit_60, X_test60)
+CrossTable(y_test60$default, credit60_pred, 
+           prop.chisq = FALSE, prop.c = FALSE, prop.r = FALSE)
 ###############
 # 60/40 split #     Acc - 70%, Kappa - 22%
 ###############
