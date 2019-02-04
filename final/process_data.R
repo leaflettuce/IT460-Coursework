@@ -42,16 +42,27 @@ df$X1.0 <- as.numeric(as.character(df$X1.0))
 
 # replace NA's in terminology
 df$X1[is.na(df$X1)] <- 0
-
+df$X1 <- droplevels(df$X1)
+  
 # remove missing size data
 df <- na.omit(df)
 
-###################
-# Standardization #
-###################
+#################
+# Normalization #
+#################
+# min max normalization
+min_max_normalize <- function(x) {
+  return((x - min(x)) / (max(x) - min(x)))
+}
 
+# apply to numeric columns
+df[1:3] <- as.data.frame(lapply(df[1:3], min_max_normalize))
 
+# check it
+head(df[1:3])
+summary(df[1:8])
 #############
 # Print out #
 #############
+write.csv(df, file = "../data/final/ad_cleaned.csv")
 
