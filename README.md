@@ -22,3 +22,14 @@ EDA of Titanic Survivor Data.
 Decision Tree Classification with C5.0 and Adaptive Boost.
 Parameter Tuning with caret package.
 ```
+
+### Lab Five
+```
+K-NN classification of breast cancer. 
+K-Means clustering to identify teen market segmentation.
+```
+
+### Final
+```
+Final project: Identifying advertisements with Feedforward Artificial Neural Net (MLP). 
+```
