@@ -34,16 +34,13 @@ df[ df == "     ?" ] <- NA
 df[ df == "?" ] <- NA
 
 
-# Remove NULLS
-# df <- na.omit(df)
-
 # set numeric
 df$X125 <- as.numeric(as.character(df$X125))
 df$X125.1 <- as.numeric(as.character(df$X125.1))
 df$X1.0 <- as.numeric(as.character(df$X1.0))
 
 
-# replace NA's
+# replace NA's in terminology
 df$X1[is.na(df$X1)] <- 0
 
 # remove missing size data
