@@ -118,7 +118,7 @@ plot(size_model)
 
 
 # Size and Count
-size_count_predictors <- c(colnames(train[, 1:3]), list('keyword_count'))
+size_count_predictors <- colnames(train[, c(1:3, 1560)])
 size_count_details <- as.formula(paste('ad. ~ ' ,paste(size_count_predictors,collapse='+')))
 
 size_count_model <- neuralnet(size_count_details, data = train, hidden = 1, lifesign = "full",
@@ -131,7 +131,7 @@ plot(size_count_model)
 # Validation #
 ##############
 
-# BASIC     // kappa - 83
+# BASIC     // kappa - 80
 basic_results <- compute(ANN_model_basic, test[, c(1:1558, 1560)])
 basic_pred_strength <- basic_results$net.result
 cor(basic_pred_strength, test$ad.)
@@ -147,11 +147,9 @@ size_pred <- size_results$net.result
 cor(size_pred, test$ad.)
 
 # SIE COUNT     // kappa -bad
-count_test <- test
-count_test[4:1558] <- NULL
-size_count_results <- compute(size_count_model, test[, c(1:3, 5)])
+size_count_results <- compute(size_count_model, test[, c(1:3, 1560)])
 size_count_pred <- size_count_results$net.result
-cor(size_count_pred, test$ad.)
+cor(size_count_pred, count_test$ad.)
 
 
 ###########
