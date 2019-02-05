@@ -89,9 +89,12 @@ rm(y_val)
 #############
 # Fit Model #
 #############
+# add feature
+train$keyword_count <- rowSums(train[4:1558] == 1)
+test$keyword_count <- rowSums(test[4:1558] == 1)
+
 # prep
-set.seed(42)
-predictors <- colnames(train[, 1:1558]) 
+predictors <- colnames(train[, c(1:1558, 1560)]) 
 fit_details <- as.formula(paste('ad. ~ ' ,paste(predictors,collapse='+')))
 
 # BASIC
@@ -99,31 +102,73 @@ ANN_model_basic <- neuralnet(fit_details, data = train, hidden = 1,
                              lifesign = "full", stepmax = 50000)
 # plot(ANN_model_basic)
 
-# Hidden = 5,3
-ANN_model_5 <- neuralnet(fit_details, data = train, hidden = c(5,3), lifesign = "full",
-                         err.fct = "sse", act.fct = "logistic", stepmax = 25000)
+# Hidden = 3,1
+ANN_model_5 <- neuralnet(fit_details, data = train, hidden = c(5,1), lifesign = "full",
+                         err.fct = "sse", act.fct = "logistic", stepmax = 50000)
 # plot(ANN_model_5)
+
+
+### SIZE ONLY
+size_predictors <- colnames(train[, 1:3]) 
+size_details <- as.formula(paste('ad. ~ ' ,paste(size_predictors,collapse='+')))
+
+size_model <- neuralnet(size_details, data = train, hidden = 1, lifesign = "full",
+                         err.fct = "sse", act.fct = "logistic", stepmax = 50000)
+plot(size_model)
+
+
+# Size and Count
+size_count_predictors <- c(colnames(train[, 1:3]), list('keyword_count'))
+size_count_details <- as.formula(paste('ad. ~ ' ,paste(size_count_predictors,collapse='+')))
+
+size_count_model <- neuralnet(size_count_details, data = train, hidden = 1, lifesign = "full",
+                        err.fct = "sse", act.fct = "logistic", stepmax = 50000)
+plot(size_count_model)
+
 
 
 ##############
 # Validation #
 ##############
 
-# BASIC     // r - 80
-basic_results <- compute(ANN_model_basic, test[, 1:1558])
+# BASIC     // kappa - 83
+basic_results <- compute(ANN_model_basic, test[, c(1:1558, 1560)])
 basic_pred_strength <- basic_results$net.result
 cor(basic_pred_strength, test$ad.)
 
-# hidden = 5,3     // r - 
-results_5 <- compute(ANN_model_5, test[, 1:1558])
+# hidden = 5,1     // kappa - 65   - overfitting
+results_5 <- compute(ANN_model_5, test[, c(1:1558, 1560)])
 pred_strength_5 <- results_5$net.result
 cor(pred_strength_5, test$ad.)
+
+# SIE ONLY     // kappa -bad
+size_results <- compute(size_model, test[, 1:3])
+size_pred <- size_results$net.result
+cor(size_pred, test$ad.)
+
+# SIE COUNT     // kappa -bad
+count_test <- test
+count_test[4:1558] <- NULL
+size_count_results <- compute(size_count_model, test[, c(1:3, 5)])
+size_count_pred <- size_count_results$net.result
+cor(size_count_pred, test$ad.)
+
 
 ###########
 # Results #
 ###########
 
 # BASIC
-confusionMatrix(as.factor(test$ad.), as.factor(round(basic_results$net.result)), positive = "1")
+confusionMatrix(as.factor(round(basic_pred_strength)), as.factor(test$ad.), positive = "1")
 
-# hidden = 5,3
+# hidden 5,1
+pred_matrix_values <- unlist(lapply(pred_strength_5, function(x) if(x > 1) 1 else 0))
+confusionMatrix(as.factor(pred_matrix_values), as.factor(test$ad.), positive = "1")
+
+# size 
+size_matrix <- unlist(lapply(size_pred, function(x) if(x > 1) 1 else 0))
+confusionMatrix(as.factor(size_matrix), as.factor(test$ad.), positive = "1")
+
+# size count
+size_count_matrix <- unlist(lapply(size_count_pred, function(x) if(x > 1) 1 else 0))
+confusionMatrix(as.factor(size_count_matrix), as.factor(test$ad.), positive = "1")
