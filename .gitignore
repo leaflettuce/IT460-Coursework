@@ -8,7 +8,7 @@
 *.DOCUMENTATION
 *.data
 *.names
-
+*.Rdata
 
 # imgs for reports
 /imgs/*
