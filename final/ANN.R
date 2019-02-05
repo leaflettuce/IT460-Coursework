@@ -97,12 +97,16 @@ test$keyword_count <- rowSums(test[4:1558] == 1)
 predictors <- colnames(train[, c(1:1558, 1560)]) 
 fit_details <- as.formula(paste('ad. ~ ' ,paste(predictors,collapse='+')))
 
-# BASIC
+#  BASIC
+basic <- neuralnet(fit_details, data =train, hidden = 1)
+# REFIT
 ANN_model_basic <- neuralnet(fit_details, data = train, hidden = 1,
-                             lifesign = "full", stepmax = 50000)
+                             lifesign = "full", stepmax = 50000,
+                             act.fct = "tanh", err.fct = 'sse', 
+                             algorithm = "rprop-", threshold = 0.005)
 # plot(ANN_model_basic)
 
-# Hidden = 3,1
+# Hidden = 5,1
 ANN_model_5 <- neuralnet(fit_details, data = train, hidden = c(5,1), lifesign = "full",
                          err.fct = "sse", act.fct = "logistic", stepmax = 50000)
 # plot(ANN_model_5)
@@ -130,8 +134,9 @@ plot(size_count_model)
 ##############
 # Validation #
 ##############
+# basic     // kappa - 78  
 
-# BASIC     // kappa - 80
+# refit     // kappa - 89
 basic_results <- compute(ANN_model_basic, test[, c(1:1558, 1560)])
 basic_pred_strength <- basic_results$net.result
 cor(basic_pred_strength, test$ad.)
@@ -141,12 +146,12 @@ results_5 <- compute(ANN_model_5, test[, c(1:1558, 1560)])
 pred_strength_5 <- results_5$net.result
 cor(pred_strength_5, test$ad.)
 
-# SIE ONLY     // kappa -bad
+# SIE ONLY     // kappa -63
 size_results <- compute(size_model, test[, 1:3])
 size_pred <- size_results$net.result
 cor(size_pred, test$ad.)
 
-# SIE COUNT     // kappa -bad
+# SIE COUNT     // kappa -73
 size_count_results <- compute(size_count_model, test[, c(1:3, 1560)])
 size_count_pred <- size_count_results$net.result
 cor(size_count_pred, count_test$ad.)
@@ -160,13 +165,13 @@ cor(size_count_pred, count_test$ad.)
 confusionMatrix(as.factor(round(basic_pred_strength)), as.factor(test$ad.), positive = "1")
 
 # hidden 5,1
-pred_matrix_values <- unlist(lapply(pred_strength_5, function(x) if(x > 1) 1 else 0))
+pred_matrix_values <- unlist(lapply(pred_strength_5, function(x) if(x > .5) 1 else 0))
 confusionMatrix(as.factor(pred_matrix_values), as.factor(test$ad.), positive = "1")
 
 # size 
-size_matrix <- unlist(lapply(size_pred, function(x) if(x > 1) 1 else 0))
+size_matrix <- unlist(lapply(size_pred, function(x) if(x > .5) 1 else 0))
 confusionMatrix(as.factor(size_matrix), as.factor(test$ad.), positive = "1")
 
 # size count
-size_count_matrix <- unlist(lapply(size_count_pred, function(x) if(x > 1) 1 else 0))
+size_count_matrix <- unlist(lapply(size_count_pred, function(x) if(x > .5) 1 else 0))
 confusionMatrix(as.factor(size_count_matrix), as.factor(test$ad.), positive = "1")
