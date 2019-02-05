@@ -1,5 +1,6 @@
 # Fit ANN to Processed Data
 library(neuralnet)
+library(caret)
 
 # import cleaned data
 df <- read.csv("../data/final/ad_cleaned.csv")
@@ -66,11 +67,15 @@ prop.table(table(y_test))
 # write.csv(y_test, file = "../data/final/splits/y_test.csv")
 
 
-# For NN splits
+# For NN splits 
 train <- df[split_rng, ]
 val <- df[-split_rng, ]
 test <- val[test_split, ]
-val <- val[-test_split, ]
+
+# no need for val
+train <- rbind(train, test)
+test <- val
+rm(val)
 
 # clean up before testing
 rm(X_train)
@@ -85,6 +90,7 @@ rm(y_val)
 # Fit Model #
 #############
 # prep
+set.seed(42)
 predictors <- colnames(train[, 1:1558]) 
 fit_details <- as.formula(paste('ad. ~ ' ,paste(predictors,collapse='+')))
 
@@ -103,7 +109,7 @@ ANN_model_5 <- neuralnet(fit_details, data = train, hidden = c(5,3), lifesign = 
 # Validation #
 ##############
 
-# BASIC     // r - 68
+# BASIC     // r - 80
 basic_results <- compute(ANN_model_basic, test[, 1:1558])
 basic_pred_strength <- basic_results$net.result
 cor(basic_pred_strength, test$ad.)
@@ -117,3 +123,7 @@ cor(pred_strength_5, test$ad.)
 # Results #
 ###########
 
+# BASIC
+confusionMatrix(as.factor(test$ad.), as.factor(round(basic_results$net.result)), positive = "1")
+
+# hidden = 5,3
