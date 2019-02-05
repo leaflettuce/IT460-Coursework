@@ -84,22 +84,34 @@ rm(y_val)
 #############
 # Fit Model #
 #############
-# predictors <- colnames(train[, 1:1559])  # REMOVE THIS?
+# prep
+predictors <- colnames(train[, 1:1558]) 
+fit_details <- as.formula(paste('ad. ~ ' ,paste(predictors,collapse='+')))
 
-ANN_model_basic <- neuralnet(ad. ~ X125 + X125.1 + X1.0, data = train)
+# BASIC
+ANN_model_basic <- neuralnet(fit_details, data = train, hidden = 1,
+                             lifesign = "full", stepmax = 50000)
+# plot(ANN_model_basic)
 
-plot(ANN_model_basic)
+# Hidden = 5,3
+ANN_model_5 <- neuralnet(fit_details, data = train, hidden = c(5,3), lifesign = "full",
+                         err.fct = "sse", act.fct = "logistic", stepmax = 25000)
+# plot(ANN_model_5)
+
 
 ##############
 # Validation #
 ##############
 
-# BASIC ONLY
-test_set <- test[, 1:3]  # REMOVE THIS
-basic_results <- compute(ANN_model_basic, test_set)
-
+# BASIC     // r - 68
+basic_results <- compute(ANN_model_basic, test[, 1:1558])
 basic_pred_strength <- basic_results$net.result
 cor(basic_pred_strength, test$ad.)
+
+# hidden = 5,3     // r - 
+results_5 <- compute(ANN_model_5, test[, 1:1558])
+pred_strength_5 <- results_5$net.result
+cor(pred_strength_5, test$ad.)
 
 ###########
 # Results #
