@@ -61,7 +61,15 @@ df[1:3] <- as.data.frame(lapply(df[1:3], min_max_normalize))
 # check it
 head(df[1:3])
 summary(df[1:8])
-#############
+
+############################
+# Clean classification var #
+############################
+summary(df$ad.)
+df$ad. <- ifelse(df$ad. == "ad.", 1, 0)
+df$ad. <- as.factor(df$ad.)
+
+s#############
 # Print out #
 #############
 write.csv(df, file = "../data/final/ad_cleaned.csv")
