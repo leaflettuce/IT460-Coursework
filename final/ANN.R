@@ -97,14 +97,32 @@ test$keyword_count <- rowSums(test[4:1558] == 1)
 predictors <- colnames(train[, c(1:1558, 1560)]) 
 fit_details <- as.formula(paste('ad. ~ ' ,paste(predictors,collapse='+')))
 
+#################################################################################
 #  BASIC
 basic <- neuralnet(fit_details, data =train, hidden = 1)
+
+# basic     // acc - 94, kappa - 78  
+basic_results <- compute(basic, test[, c(1:1558, 1560)])
+basic_pred <- basic_results$net.result
+cor(basic_pred, test$ad.)
+
+confusionMatrix(as.factor(round(basic_pred)), as.factor(test$ad.), positive = "1")
+##################################################################################
+
+##################################################################################
 # REFIT
-ANN_model_basic <- neuralnet(fit_details, data = train, hidden = 1,
+refit_model <- neuralnet(fit_details, data = train, hidden = 1,
                              lifesign = "full", stepmax = 50000,
                              act.fct = "tanh", err.fct = 'sse', 
                              algorithm = "rprop-", threshold = 0.005)
-# plot(ANN_model_basic)
+
+# refit     // acc - 97, kappa - 89
+refit_results <- compute(refit_model, test[, c(1:1558, 1560)])
+refit_pred <- refit_results$net.result
+cor(refit_pred, test$ad.)
+
+confusionMatrix(as.factor(round(refit_pred)), as.factor(test$ad.), positive = "1")
+##################################################################################
 
 # Hidden = 5,1
 ANN_model_5 <- neuralnet(fit_details, data = train, hidden = c(5,1), lifesign = "full",
@@ -134,7 +152,6 @@ plot(size_count_model)
 ##############
 # Validation #
 ##############
-# basic     // kappa - 78  
 
 # refit     // kappa - 89
 basic_results <- compute(ANN_model_basic, test[, c(1:1558, 1560)])
@@ -154,7 +171,7 @@ cor(size_pred, test$ad.)
 # SIE COUNT     // kappa -73
 size_count_results <- compute(size_count_model, test[, c(1:3, 1560)])
 size_count_pred <- size_count_results$net.result
-cor(size_count_pred, count_test$ad.)
+cor(size_count_pred, test$ad.)
 
 
 ###########

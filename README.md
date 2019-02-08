@@ -25,11 +25,11 @@ Parameter Tuning with caret package.
 
 ### Lab Five
 ```
-K-NN classification of breast cancer. 
+Identifying breast cancer with kNN classification. 
 K-Means clustering to identify teen market segmentation.
 ```
 
 ### Final
 ```
-Final project: Identifying advertisements with Feedforward Artificial Neural Net (MLP). 
+Final project: Identifying image advertisements with Artificial Neural Nets and k-NN. 
 ```
