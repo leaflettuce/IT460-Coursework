@@ -2,7 +2,7 @@ library(class)
 library(gmodels)
 library(caret)
 
-set.seed(12345)
+set.seed(2345)
 setwd('E:/projects/it460/week_five')
 
 df <- read.csv('../data/wisc_bc_data.csv', stringsAsFactors = FALSE)
@@ -84,7 +84,21 @@ CrossTable(df_test_labels, test_pred_z, prop.chisq = FALSE)
 ###############
 # grid tuning #
 ###############
+df_c <- cbind(df[, 1], df_z[,2:30])
+names(df_c)[1] <- "class"
 
-# m
-# Fit
+
+# Custom          
+ctrl <- trainControl(method = "repeatedcv", number = 10, repeats = 3)
+
+m_cust <- train(class ~ ., data = df_c, method = "knn", 
+                trControl=ctrl,
+                preProcess = c("center", "scale"),
+                tuneLength = 10)
+                
+# results
+m_cust
+
 # CrossTable
+m_pred <- predict(m_cust, newdata = df_test_2)
+CrossTable(df_test_labels, m_pred, prop.chisq = FALSE)
