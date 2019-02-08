@@ -93,6 +93,17 @@ rm(y_val)
 train$keyword_count <- rowSums(train[4:1558] == 1)
 test$keyword_count <- rowSums(test[4:1558] == 1)
 
+# Standardize keyword count
+min_max_normalize <- function(x) {
+  return((x - min(x)) / (max(x) - min(x)))
+}
+
+# apply to numeric columns
+test$keyword_count <- min_max_normalize(test$keyword_count)
+train$keyword_count <- min_max_normalize(train$keyword_count)
+
+
+
 # prep
 predictors <- colnames(train[, c(1:1558, 1560)]) 
 fit_details <- as.formula(paste('ad. ~ ' ,paste(predictors,collapse='+')))
