@@ -34,11 +34,11 @@ table(teens$female, useNA = "ifany")
 table(teens$no_gender, useNA = "ifany")
 
 
-# Impute age
-mean(teens$age)
-mean(teens$age, na.rm = TRUE)
-
-aggregate(data = teens, age ~ gradyear, mean, na.rm = TRUE)
+  # Impute age
+  mean(teens$age)
+  mean(teens$age, na.rm = TRUE)
+  
+  aggregate(data = teens, age ~ gradyear, mean, na.rm = TRUE)
 
 # replace NA with average
 ave_age <- ave(teens$age, teens$gradyear, FUN = function(x) mean(x, na.rm = TRUE))
@@ -89,7 +89,7 @@ clusters_3 <- kmeans(interests_z, 3)
 teens$cluster <- clusters_3$cluster
 
 aggregate(data = teens, age ~ cluster, mean)
-aggregate(data = teens, female ~ cluster, mean)
+aggregate(data = teens, female ~ cluster, mea
 
 # k = 10
 clusters_10 <- kmeans(interests_z, 10)
