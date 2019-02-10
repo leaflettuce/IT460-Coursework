@@ -19,5 +19,6 @@ In progress.
 ### Results
 ```
 ANN: acc- 97%, kappa- 88%
-kNN: tbd
+kNN: acc- 95%, kappa- 77%
+ nb: tbd
 ```
