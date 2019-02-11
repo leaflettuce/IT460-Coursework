@@ -29,6 +29,12 @@ Identifying breast cancer with kNN classification.
 K-Means clustering to identify teen market segmentation.
 ```
 
+### Lab Six
+```
+Natural Language Processing with tm library
+Classifying SMS spam with Naive Bayes.
+```
+
 ### Final
 ```
 Final project: Identifying image advertisements with Artificial Neural Nets and k-NN. 
