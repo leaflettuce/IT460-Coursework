@@ -26,5 +26,5 @@ Fine-tuned ANN w/ 1 hidden neuron modeling the 'best'.
 
 ANN: acc- 97%, kappa- 88%
 kNN: acc- 95%, kappa- 77%
- nb: acc - 96%, kappa- 86%
+ nb: acc- 96%, kappa- 86%
 ```
