@@ -1,6 +1,7 @@
 # IT-460: Machine Learning
 
 Coursework for SNHU Machine Learning Class.
+
 textbook: 'Machine Learning with R' by Brett Lantz.
 
 ### Lab One
