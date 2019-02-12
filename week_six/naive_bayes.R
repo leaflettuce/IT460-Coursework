@@ -2,6 +2,7 @@ library(caret)
 library(e1071)
 library(tm)
 library(SnowballC)
+library(wordcloud)
 
 setwd("E:/projects/it460/week_six")
 
@@ -80,3 +81,19 @@ sms_dtm
 ##########
 # splits #
 ##########
+
+sms_dtm_train <- sms_dtm[1:4169, ]
+sms_dtm_test <- sms_dtm[4170:5574, ]
+
+train_labels <- sms_raw[1:4169, ]$type
+test_labels <- sms_raw[4170:5574, ]$type
+
+# check
+prop.table(table(train_labels))
+prop.table(table(test_labels))
+
+#############
+# Visualize #
+#############
+
+# word cloud
