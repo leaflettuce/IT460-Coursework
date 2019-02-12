@@ -48,7 +48,7 @@ replacePunctuation <- function(x) {
 }
 
 # remove punctuation
-sms_corpus_clean <- tm_map(sms_corpus_clean, replacePunctuation)
+sms_corpus_clean <- tm_map(sms_corpus_clean, removePunctuation) #replacePunctuation if wanted
 
 # stem words
 sms_corpus_clean <- tm_map(sms_corpus_clean, stemDocument)
@@ -63,3 +63,20 @@ as.character(sms_corpus_clean[[1]])
 # Tokenize #
 ############
 
+# document-term matrix
+sms_dtm <- DocumentTermMatrix(sms_corpus_clean)
+
+# secon method to tokenize and clean together!
+sms_dtm2 <- DocumentTermMatrix(sms_corpus, control = list(
+  tolower = TRUE,
+  removeNumbers = TRUE,
+  stopwords = TRUE, 
+  removePunctuation = TRUE,
+  stemming = TRUE
+))
+
+sms_dtm
+
+##########
+# splits #
+##########
