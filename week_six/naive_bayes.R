@@ -3,6 +3,7 @@ library(e1071)
 library(tm)
 library(SnowballC)
 library(wordcloud)
+library(gmodels)
 
 setwd("E:/projects/it460/week_six")
 
@@ -97,3 +98,61 @@ prop.table(table(test_labels))
 #############
 
 # word cloud
+wordcloud(sms_corpus_clean, min.freq = 50, random.order = FALSE)
+
+# split the two
+spam <- subset(sms_raw, type == "spam")
+ham <- subset(sms_raw, type == "ham")
+
+# more clouds
+wordcloud(spam$text, max.words = 50, scale = c(3, 0.5))
+wordcloud(ham$text, max.words = 50, scale = c(3, 0.5))
+
+#####################
+# Feature Reduction #
+#####################
+
+# check at least 5 occurances of term
+findFreqTerms(sms_dtm_train, 5)
+sms_freq_words <- findFreqTerms(sms_dtm_train, 5)
+
+str(sms_freq_words)
+
+# train and test
+sms_dtm_freq_train <- sms_dtm_train[ , sms_freq_words]
+sms_dtm_freq_test <- sms_dtm_test[ , sms_freq_words]
+
+# set to categoerical
+convert_counts <- function(x) {
+  x <- ifelse(x > 0, "yes", "no")
+}
+
+sms_train <- apply(sms_dtm_freq_train, MARGIN = 2, convert_counts)
+sms_test <- apply(sms_dtm_freq_test, MARGIN = 2, convert_counts)
+
+
+############
+# model NB #
+############    97.9% acc
+
+nb_model <- naiveBayes(sms_train, train_labels )
+nb_pred <- predict(nb_model, sms_test)
+
+CrossTable(nb_pred, test_labels,
+           prop.chisq = FALSE,
+           prop.t = FALSE,
+           dnn = c("predicted", "actual"))
+
+
+############
+# improve  #
+############  97.5%
+
+nb_lap_model <- naiveBayes(sms_train, train_labels, laplace = 1)
+nb_lap_pred <- predict(nb_lap_model, sms_test)
+
+CrossTable(nb_lap_pred, test_labels,
+           prop.chisq = FALSE,
+           prop.t = FALSE,
+           dnn = c("predicted", "actual"))
+
