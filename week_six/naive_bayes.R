@@ -4,6 +4,7 @@ library(tm)
 library(SnowballC)
 library(wordcloud)
 library(gmodels)
+library(klaR)
 
 setwd("E:/projects/it460/week_six")
 
@@ -155,4 +156,35 @@ CrossTable(nb_lap_pred, test_labels,
            prop.chisq = FALSE,
            prop.t = FALSE,
            dnn = c("predicted", "actual"))
+
+
+########
+# klaR #  # SAME AS DEFAULT NB in e1071
+########
+klar_data <- as.data.frame(sms_train)
+klar_data$label <- train_labels
+
+nb_klar_model <- NaiveBayes(label ~ ., data = klar_data, fL = 0)
+klar_pred <- predict(nb_klar_model, sms_test)
+
+CrossTable(klar_pred$class, test_labels,
+           prop.chisq = FALSE,
+           prop.t = FALSE,
+           dnn = c("predicted", "actual"))
+
+
+# Caret tuning of klAR
+ctrl <- trainControl(method = "cv", number = 10, selectionFunction = "best")
+grid <- expand.grid(fL = c(0, 0.5, 1, 2, 5),
+                    usekernel = c(TRUE, FALSE),
+                    adjust = c(0, 0.5, 1, 2))
+
+m <- train(label ~ ., data = klar_data, method = "nb",
+           metric = 'Accuracy',
+           trControl = ctrl,
+           tuneGrid = grid)
+
+# results
+m
+
 
