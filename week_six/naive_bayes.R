@@ -174,10 +174,10 @@ CrossTable(klar_pred$class, test_labels,
 
 
 # Caret tuning of klAR
-ctrl <- trainControl(method = "cv", number = 10, selectionFunction = "best")
-grid <- expand.grid(fL = c(0, 0.5, 1, 2, 5),
+ctrl <- trainControl(method = "boot", number = 3, selectionFunction = "best")
+grid <- expand.grid(fL = c(0, 0.5, 1),
                     usekernel = c(TRUE, FALSE),
-                    adjust = c(0, 0.5, 1, 2))
+                    adjust = FALSE)
 
 m <- train(label ~ ., data = klar_data, method = "nb",
            metric = 'Accuracy',
@@ -186,5 +186,3 @@ m <- train(label ~ ., data = klar_data, method = "nb",
 
 # results
 m
-
-
