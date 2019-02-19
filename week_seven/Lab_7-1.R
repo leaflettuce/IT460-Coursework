@@ -68,3 +68,13 @@ pred_str2 <- model_results2$net.result
 
 # correlation
 cor(pred_str2, concrete_test$strength)
+
+# Also consider:
+ ## Can ann be used to solve OCR problem in SVR section?
+  # --> Yes it can be used for image recognition to classify multi-out.. 
+
+ ## How would input data need to be modified?
+  # --> Norm or standardizing would speed up fitting but not necessary for ANN. dummy var letter
+
+ ## Which algorithm would be easier to tune for better performance and why?
+  # --> SVR - fewer parameters-- kernel rather than neural sizes/functions/etc.
