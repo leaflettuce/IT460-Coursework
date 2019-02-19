@@ -37,6 +37,11 @@ Natural Language Processing with tm library
 Classifying SMS spam with Naive Bayes.
 ```
 
+### Lab Seven
+```
+Predicting concrete strength based on numeric measurements with Artificial Neural Networks.
+```
+
 ### Final
 ```
 Final project: Identifying image advertisements with Artificial Neural Nets and k-NN. 
