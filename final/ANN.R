@@ -1,7 +1,7 @@
 # Fit ANN to Processed Data
 library(neuralnet)
 library(caret)
-
+library(ROCR)
 # import cleaned data
 df <- read.csv("../data/final/ad_cleaned.csv")
 
@@ -133,6 +133,22 @@ refit_pred <- refit_results$net.result
 cor(refit_pred, test$ad.)
 
 confusionMatrix(as.factor(round(refit_pred)), as.factor(test$ad.), positive = "1")
+###
+###
+###
+# ROC
+roc_pred <- prediction(predictions = refit_pred, labels = test$ad.)
+refit_perf <- performance(roc_pred, measure = 'tpr', x.measure = 'fpr')
+
+# plot
+plot(refit_perf, main = "ROC surve for Refit ANN",
+     col = "blue", lwd = 3)
+abline(a = 0, b = 1, lwd = 2, lty = 2)
+
+# AUC
+refit_perf.auc <- performance(refit_pred, measure = "auc")
+unlist(refit_perf@y.values)
+
 ##################################################################################
 
 # Hidden = 5,1
