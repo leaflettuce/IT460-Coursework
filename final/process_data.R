@@ -1,12 +1,8 @@
 #############################
 # Library Imports and Setup #
 #############################
-# Library Imports
-
-
 # Working Dir
 setwd('e:/projects/it460/final')
-
 
 # Data Import
 df <- read.csv("../data/final/ad.csv")
@@ -21,6 +17,28 @@ summary(df[1])
 summary(df[2])
 summary(df[3])
 
+hist(df$X125)
+hist(df$X125.1)
+hist(df$X1.0)
+
+plot(df[0:2])
+
+# visualize matrix
+
+#library(plotrix)
+#x11(width=12,height=5)
+#df_num <- as.data.frame(lapply(df, as.numeric))
+#color2D.matplot(df_num[4:1557],c(1,1,0),c(0,1,0),0,border=FALSE) 
+
+library(ggplot2)
+library(reshape2)
+test_m <- melt(df[4:1558])
+ggplot(test_m, aes(X1, variable, fill = value)) + geom_raster() +
+  scale_fill_gradient(low = "white", high = "red")
+
+ggplot(aes(x = ad.), data = df) + 
+  geom_histogram(stat = "count")
+
 ############
 # Cleaning #
 ############
@@ -32,6 +50,7 @@ df[] <- lapply(df, function(x) as.factor(x))
 df[ df == "   ?" ] <- NA
 df[ df == "     ?" ] <- NA
 df[ df == "?" ] <- NA
+
 
 
 # set numeric

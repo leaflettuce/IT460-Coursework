@@ -119,7 +119,6 @@ cor(basic_pred, test$ad.)
 
 confusionMatrix(as.factor(round(basic_pred)), as.factor(test$ad.), positive = "1")
 ##################################################################################
-
 ##################################################################################
 # REFIT
 refit_model <- neuralnet(fit_details, data = train, hidden = 1,
