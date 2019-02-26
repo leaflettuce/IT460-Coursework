@@ -79,7 +79,7 @@ df[1:3] <- as.data.frame(lapply(df[1:3], min_max_normalize))
 
 # check it
 head(df[1:3])
-summary(df[1:8])
+summary(df[1:4])
 
 ############################
 # Clean classification var #
